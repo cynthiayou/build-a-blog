@@ -11,10 +11,10 @@
             padding: 10px;
         }
 
-        a {
-            font-size: 10px;
+        .click {
+            font-size: 5px;
         }
-        
+
         .error {
             color: red;
         }
@@ -59,12 +59,15 @@
             margin: 0;
             font-size: 17px;
         }
+        .page_header {
+            text-decoration: none;
+        }
 
 
 
     </style>
     <body>
-        <h1>blog!</h1>
+        <h1><a href="/" class="page_header">blog!</a></h1>
         {% block content %}
 
         {% endblock %}

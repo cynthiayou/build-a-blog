@@ -54,9 +54,11 @@ class NewPost(webapp2.RequestHandler):
         else:
             blog = Blogs(title = title, content = content)
             blog.put()
-            self.redirect("/")
-# class BlogDetail(Handler):
-# 	    def get(self, blog_id):
+            self.redirect("/" + str(blog.key().id())) 
+
+# class BlogDetail(webapp2.RequestHandler):
+# 	    def get(self, id):
+#             self.response.write(id)
 # 	        blog = Blogs.get_by_id(int(blog_id))
 # 	        if not blog:
 # 	            self.error(404)
@@ -68,8 +70,20 @@ class NewPost(webapp2.RequestHandler):
 #
 # 	        self.response.write(content)
 # webapp2.Route('/<blog_id:\d+>', BlogDetail)
+class ViewBlog(webapp2.RequestHandler):
+    def get(self, id):
+        blog = Blogs.get_by_id(int(id))
+        if not blog:
+            self.response.write("oops! something went wrong!")
+        t = jinja_env.get_template('blogdetail.html')
+        render_content = t.render(blog = blog)
+
+        self.response.write(render_content)
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/newpost', NewPost)    
+    ('/newpost', NewPost),
+    webapp2.Route('/<id:\d+>',ViewBlog)
+
+
 ], debug=True)

@@ -4,12 +4,12 @@
 
 {% for blog in blogs_query %}
     <div class="blog">
-        <div class="blog-title">{{blog.title}}</div>
+        <div class="blog-title"><a href="/{{blog.key().id()}}">{{blog.title}}</a></div>
         <pre class="blog-content">{{blog.content}}</pre>
     </div>
 {% endfor %}
 
-<div><a href="/newpost">Click here to make a new post!</a></div>
+<div><a href="/newpost" class="click">Click here to make a new post!</a></div>
 
 
 {% endblock %}
