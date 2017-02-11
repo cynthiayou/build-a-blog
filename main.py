@@ -34,25 +34,42 @@ class Blogs(db.Model):
 class MainPage(webapp2.RequestHandler):
     def get(self):
         t = jinja_env.get_template("mainpage.html")
-        blogs_query = db.GqlQuery("SELECT * FROM Blogs ORDER BY created DESC")
+        blogs_query = db.GqlQuery("SELECT * FROM Blogs ORDER BY created DESC LIMIT 5")
         render_content = t.render(blogs_query = blogs_query)
+        self.response.write(render_content)
+
+class NewPost(webapp2.RequestHandler):
+    def get(self):
+        t = jinja_env.get_template("newpost.html")
+        render_content = t.render()
         self.response.write(render_content)
     def post(self):
         title = self.request.get("title")
         content = self.request.get("content")
         if (not title) or (title.strip() == "") or (not content) or (content.strip() == ""):
             error = "We need both a title and some content!"
-            t = jinja_env.get_template("mainpage.html")
+            t = jinja_env.get_template("newpost.html")
             render_content = t.render(error=error, title=title, content=content)
             self.response.write(render_content)
         else:
             blog = Blogs(title = title, content = content)
             blog.put()
-
             self.redirect("/")
-
-
+# class BlogDetail(Handler):
+# 	    def get(self, blog_id):
+# 	        blog = Blogs.get_by_id(int(blog_id))
+# 	        if not blog:
+# 	            self.error(404)
+#
+#
+# 	        t = jinja_env.get_template('blog_detail.html')
+# 	        content = t.render(blog=blog)
+#
+#
+# 	        self.response.write(content)
+# webapp2.Route('/<blog_id:\d+>', BlogDetail)
 
 app = webapp2.WSGIApplication([
-    ('/', MainPage)
+    ('/', MainPage),
+    ('/newpost', NewPost)    
 ], debug=True)
